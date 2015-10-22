@@ -31,6 +31,8 @@ To connect with exacloud, use the ssh command:
 
 ##Task 1: Testing your code in an interactive session
 
+We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency. 
+
 **IMPORTANT:** Do not run jobs on the head node! You will be yelled at, and for good reason. The head node is a very busy node, handling job scheduling and file transfer for the entire cluster. If you run jobs on it, you essentially are slowing everyone else down.
 
 ##Task 2: Splitting up your problem
