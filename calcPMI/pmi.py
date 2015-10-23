@@ -24,21 +24,28 @@ example:
 	returns: 	samplecorpus.txt.pmioutput
 """
 
+# TODO:
+# Parallelize operation
+# retain usernames?
+# Filter low frequency words?
+# Shift functions to external module?
+# Filter most common words in english language (at/the/in/and/for)?
+
 # librarires
 import math		# math for log function
 import re		# re for string operations
 import string	# string for filtering
 import sys		# sys for accepting command line arguments
 import csv		# csv to open file
-import pickle	# for saving output
+import cPickle	# for saving output
 
 # Parameters
 woi1 = "at"	# first word to compare 2grams
 woi2 = "the"	# second word to compare 2grams
 
 # load data
-#filename = sys.argv[1]
-filename = "sample.csv"
+filename = sys.argv[1]
+#filename = "sample.csv"
 fh = open(filename, "r")
 
 # Initialize dictionaries and counters
@@ -114,8 +121,3 @@ for word in word_dict:
 		pmi_dict[word]["woi1"] = calcPMI(word_dict[word]["count"],woi1_ct,tweet_ct,word_dict[word]["cooccurrence1"])
 	if word_dict[word]["cooccurrence2"] > 0:
 		pmi_dict[word]["woi2"] = calcPMI(word_dict[word]["count"],woi2_ct,tweet_ct,word_dict[word]["cooccurrence2"])
-
-# TODO:
-# Parallelize operation
-# Shift functions to external module?
-# Filter most common words in english language (at/the/in/and/for)?
