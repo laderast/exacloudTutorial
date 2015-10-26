@@ -23,17 +23,31 @@ For this reason, do *not* use Lustre for long term storage of your data! It's be
 
 Before you can even start with exacloud, you need an exacloud login and password. You will need to talk with ACC for an account and password.
 
-To connect with exacloud, use the ssh command:
+1. To connect with exacloud, use the ssh command and input your password when prompted:
+
+```
+ssh USERNAME@exacloud.ohsu.edu
+```
+
+2. Your entry point is the ACC filesystem, which is shared across all ACC machines (not just exacloud). You can run jobs from here, but you will run into space limitations (10 Gb limit). If you have larger data, it's much easier to use the lustre filesystem. So let's go to the lustre folder:
 
 ```
 ```
 
+3. Make your own folder in the lustre system. Copy the scripts, and example data into your folder.
+
+```
+```
 
 ##Task 1: Testing your code in an interactive session
 
 We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency.
 
 **IMPORTANT:** Do not run jobs on the head node! You will be yelled at, and for good reason. The head node is a very busy node, handling job scheduling and file transfer for the entire cluster. If you run jobs on it, you essentially are slowing everyone else down.
+
+Instead, you can test your jobs by opening up an interactive session on exacloud. Essentially, opening up an interactive session guarantees the use of a particular node on exacloud. You can run jobs in an interactive session on the command line, which is what we're are going to do.
+
+1. Take a look at the PMI script.
 
 ##Task 2: Splitting up your problem
 
