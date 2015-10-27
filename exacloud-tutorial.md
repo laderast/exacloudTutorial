@@ -47,7 +47,8 @@ We will be reproducing the following analysis using data pulled from the twitter
 
 Instead, you can test your jobs by opening up an interactive session on exacloud. Essentially, opening up an interactive session guarantees the use of a particular node on exacloud. You can run jobs in an interactive session on the command line, which is what we're are going to do.
 
-1. Take a look at the PMI script.
+1. Take a look at the PMI script ([]). What are the functions?
+2. We will be testing out the 
 
 ##Task 2: Splitting up your problem
 
