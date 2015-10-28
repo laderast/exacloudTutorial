@@ -24,14 +24,7 @@ example:
 	returns: 	samplecorpus.txt.pmioutput
 """
 
-# TODO:
-# Parallelize operation
-# retain usernames?
-# Filter low frequency words?
-# Shift functions to external module?
-# Filter most common words in english language (at/the/in/and/for)?
-
-# librarires
+# libraries
 import math		# math for log function
 import re		# re for string operations
 import string	# string for filtering
@@ -105,19 +98,3 @@ word_dict["__totalcorpus"] = {"count":tweet_ct,"term1_ct":woi1_ct,"term2_ct":woi
 # Write output dictionary to file
 with open(filename + ".pmioutput","w") as fh:
 	cPickle.dump(word_dict,fh)
-
-# Calculations for PMI below here
-# Needs to be modified to work in parallel
-
-def calcPMI(word_count,woi_count,total_count,cooccurrence_count):
-	"""calculates pointwise mutual information for each word with a given word of interest"""
-	pmi = math.log((cooccurrence_count/word_count)/((woi_count/count)*(word_count/count)))
-	return pmi
-
-pmi_dict = {}
-for word in word_dict:
-	pmi_dict[word] = {"woi1":0,"woi2":0}
-	if word_dict[word]["cooccurrence1"] > 0:
-		pmi_dict[word]["woi1"] = calcPMI(word_dict[word]["count"],woi1_ct,tweet_ct,word_dict[word]["cooccurrence1"])
-	if word_dict[word]["cooccurrence2"] > 0:
-		pmi_dict[word]["woi2"] = calcPMI(word_dict[word]["count"],woi2_ct,tweet_ct,word_dict[word]["cooccurrence2"])
