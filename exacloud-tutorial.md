@@ -21,12 +21,12 @@ For this reason, do *not* use Lustre for long term storage of your data! It's be
 
 ##Our Goal for Today
 
-We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency.
+We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency. We'll do this using two python scripts. The first 
 
 Other fun pairs of words:
   * "british" and "american"
   * "love" and "hate"
-  *
+  * "tweet" and "post"
 
 ##Task 0: Getting onto exacloud and understanding the lustre filesystem
 
@@ -84,6 +84,8 @@ Look at "wcount.submit" using a text editor such as nano.
 
 Exit the interactive session using `exit`. We need to be in the head node to now submit our script.
 
+More information about writing submit files is here: [Writing Condor Submit Files](http://www.iac.es/sieinvens/siepedia/pmwiki.php?n=HOWTOs.CondorSubmitFile).
+
 ###Extension: Asking for machines with specific requirements
 
 HTCondor has a 'classified' system that allows you to request specific processing and memory requirements for your job.
@@ -100,6 +102,8 @@ There are two commands that will be necessary to understand running jobs on exac
 
 ##Task 6: Debugging
 
-If you want to stop a job, you can use [condor_rm]
+If you want to stop a job, you can use `condor_rm` to remove your job from the queue.
+
+More information about condor commands here: [Useful Condor Commands](http://vivaldi.ll.iac.es/sieinvens/siepedia/pmwiki.php?n=HOWTOs.CondorUsefulCommands)
 
 If your job seems slow, check the excaloud usage display at [http://exacloud.ohsu.edu/ganglia/](http://exacloud.ohsu.edu/ganglia/)
