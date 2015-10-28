@@ -1,7 +1,14 @@
 """
 Script looks for files with .pmioutput flag and combines those dictionaries into a 
 	single dictionary of values. This dictionary is output as 'totalpmioutput.csv' in csv format.
+
+output gives three columns of data:
+word = 				the word currently being compared to the two target words of interest
+pmi_term1_w_word = 	the pmi value of the current word with the first word of interest
+pmi_term2_w_word = 	the pmi value of the current word with the second word of interest
 """
+
+# ToDo: embed information about the two words that are being compared by the script?
 
 import os
 import cPickle
