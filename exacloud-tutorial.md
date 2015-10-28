@@ -19,6 +19,15 @@ You might wonder if you need to load all of your data onto each node that you ru
 
 For this reason, do *not* use Lustre for long term storage of your data! It's better to transfer your files off of Lustre when you're done.
 
+##Our Goal for Today
+
+We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency.
+
+Other fun pairs of words:
+  * "british" and "american"
+  * "love" and "hate"
+  *
+
 ##Task 0: Getting onto exacloud and understanding the lustre filesystem
 
 Before you can even start with exacloud, you need an exacloud login and password. You will need to talk with ACC for an account and password.
@@ -39,12 +48,11 @@ cd /home/exacloud/lustre1/[our folder name]
 
 ```
 mkdir [your user name]
-cp 
+cp
 ```
 
 ##Task 1: Testing your code in an interactive session
 
-We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency.
 
 **IMPORTANT:** Do not run jobs on the head node! You will be yelled at, and for good reason. The head node is a very busy node, handling job scheduling and file transfer for the entire cluster. If you run jobs on it, you essentially are slowing everyone else down.
 
