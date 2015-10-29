@@ -4,7 +4,7 @@ Pointwise Mutual Information
 Ryan Swan
 2015-10-23
 
-This script takes a filename as an argument. The file must contain tweets from the 
+This script takes a filename as an argument. The file must contain tweets from the
 twitter sentiment analysis data set housed at http://cs.stanford.edu/people/alecmgo/trainingandtestdata.zip
 
 The script processes the input file and produces an output file with .pmioutput added to the original name.
@@ -19,7 +19,7 @@ under the __totalcorpus key:
 	count of occurrences of term 1
 	count of occurrences of term 2
 
-example: 
+example:
 	call:		python pmi.py samplecorpus.txt
 	returns: 	samplecorpus.txt.pmioutput
 """
