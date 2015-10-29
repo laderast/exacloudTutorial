@@ -1,0 +1,13 @@
+N = 1
+#HTCondor universe
+universe = vanilla
+#set the executable here (could be a shell script, software, anything)
+executable = /usr/bin/python
+#here we invoke our python script and use the process id to
+#need to use $INT($Process, %02d) somehow
+myIndex = $(Process)
+arguments = "pmi.py x$INT(myIndex, %02d)"
+when_to_transfer_output = ON_EXIT
+#uncomment and fill out your username to get
+#notify_user = yourname@ohsu.edu
+Queue $(N)
