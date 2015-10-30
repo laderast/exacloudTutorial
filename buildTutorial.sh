@@ -4,4 +4,5 @@ cp scripts/* exacloudTutorial/
 cp markdown/exacloud-tutorial.* exacloudTutorial/
 cp data/fulldata.csv exacloudTutorial/
 cp data/test.csv exacloudTutorial/
+chmod 777 exacloudTutorial/*
 tar -cvzf exacloudTutorial.tar.gz exacloudTutorial/

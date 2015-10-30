@@ -57,7 +57,7 @@ ssh USERNAME@exacloud.ohsu.edu
 2. Your entry point is the ACC (Advanced Computing Center) filesystem, which is shared across all ACC machines (not just exacloud). You can run jobs from here, but you will run into space limitations (10 Gb limit). If you have larger data, it's much easier to use the lustre filesystem. So let's go to the lustre folder:
 
 ```
-cd /home/exacloud/lustre1/[our folder name]
+/home/exacloud/lustre1/users/laderast/exacloudTutorial.tar.gz
 ```
 
 3. Make your own folder in the lustre folder. Copy the scripts, and example data into your folder.
@@ -111,7 +111,7 @@ ls -l data.*
 4. Confirm that the files have been renamed properly.
 
 ```
-./renameFiles.sh
+ls -l
 ```
 
 ###Extension: Using multiple directories to divide your jobs
