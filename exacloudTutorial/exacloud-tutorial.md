@@ -25,7 +25,7 @@ For this reason, do *not* use Lustre for long term storage of your data! It's be
 
 We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency in a corpus of tweets.
 
-![pmi equation](pmiequation.png)
+![pmi equation](markdown/pmiequation.png)
 
 Essentially, we need to calculate the probability of our two words of interest. Then for every other word, we calculate the probability of co-occurence with one of our words.
 
@@ -93,12 +93,9 @@ We'll be using the unix command split to split our 1 and 2-gram task up into 50 
 
 1. Run the split command on the training file in your directory.
 ```
-#numeric-suffixes argument is so split doesn't label the files alphabetically (xaa, xab, xac, etc)
+#numeric-suffixes argument is so split doesn't label the files
+#alphabetically (xaa, xab, xac, etc)
 split --numeric-suffixes --lines=200000 fulldata.csv
-```
-```
-#awk command to split fulldata into files of 200000 lines and numbered sequentially with prefix "data"
-awk 'NR%200000==1{i=0;x="data"++i;}{print > x}' fulldata.csv
 ```
 
 2. List the contents of your directory. How many files did you make using the split command? Remember this number.
@@ -120,12 +117,26 @@ nano pmi.submit
 ```
 2. Set the N variable to the number of files you want to process (you did remember this number, right?).
 3. We are going to be using the built in looping mechanism in HTCondor to run the pmi.py script on each file separately. Look at the "arguments" line. We use the built in $(Process) variable to select which file to run.
-4. If you want to be notified by email, fill out your email in the notify_user line and uncomment it (remove the "#" at the beginning of the line).
+4. If you want to be notified by email, fill out your email in the notify_user line and uncomment it (remove the "#" at the beginning of the line). Save your file.
 5. Exit the interactive session using `exit`. We need to be in the head node to now submit our script.
 
 ###Extension: Asking for machines with specific requirements
 
-HTCondor has a 'classified' system that allows you to request specific processing and memory requirements for your job. You can specify parameters such as [].
+HTCondor has a 'classified' system that allows you to request specific processing and memory requirements for your job. You can specify parameters such as memory:
+
+```
+request_memory = 1.5 GB
+```
+
+Please note that nodes with your requirements may not be available, and so your job may be waiting in the condor_q until such nodes are available.
+
+If that is too strict, you can also rank machines by preference.
+
+```
+Rank  = (Memory >= 4096)
+```
+
+This is a less restrictive form, in that the machines will be ranked by available memory and HTCondor will run the jobs on the best nodes available.
 
 ###Extension: Writing a script that generates a submit script
 
@@ -135,7 +146,7 @@ For example, we can run the submit script for three different files called "apri
 
 ```
 #Example submit script for running on multiple files
-#you can easily write a python script to generate such a script!
+#you can easily write a python script to generate such a file!
 universe = vanilla
 #set the executable here (could be a shell script, software, anything)
 executable = /usr/bin/python
