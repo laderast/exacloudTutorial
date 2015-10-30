@@ -94,13 +94,24 @@ We'll be using the unix command split to split our 1 and 2-gram task up into 50 
 1. Run the split command on the training file in your directory.
 ```
 #numeric-suffixes argument is so split doesn't label the files
-#alphabetically (xaa, xab, xac, etc)
-split --numeric-suffixes --lines=200000 fulldata.csv
+#alphabetically (data.aa, data.ab, data.ac, etc)
+split --numeric-suffixes --lines=200000 fulldata.csv data.
 ```
 
 2. List the contents of your directory. How many files did you make using the split command? Remember this number.
 ```
-ls -l
+ls -l data.*
+```
+
+3. If you noticed, the output of split gives us a padded numbering (for example, data.00 instead of data.0, data.01 instead of data.1), which makes it difficult to deal with using the built in looping functions in HTCondor. So we're going to rename these files using the renameFiles.sh script. (Take a look at it if you like).
+```
+./renameFiles.sh
+```
+
+4. Confirm that the files have been renamed properly.
+
+```
+./renameFiles.sh
 ```
 
 ###Extension: Using multiple directories to divide your jobs
@@ -191,7 +202,10 @@ Hopefully your job executed correctly. If not, ask for help.
 ```
 ls *.pmioutput
 ```
-3. Run the *stitchpmi.py* script to bring it all together. The output of *stitchpmi.py* is a single file, *totalpmioutput.csv*
+3. Run the *stitchpmi.py* script to bring it all together. The output of *stitchpmi.py* is a single file, *totalpmioutput.csv*.
+```
+python stitchpmi.py
+```
 4. Let's plot the non-zero results using R. Run the *plot-pmi.R* script. The output of this will be a single plot, *pmi.jpg*.
 ```
 Rscript plot-pmi.R totalpmioutput.csv
@@ -206,6 +220,17 @@ We have showed you the basic way to run jobs on exacloud. Now, you'll need to le
 The one important trick is how to install dependencies that you need for each language in Lustre. You can set important environment variables (such as *R_LIBS_USER*, which is the default location of your personal R library) using an "environment=" line in your submit script. For more info, please see the Exainfo beginner user wiki linked below.
 
 ##Task 7: Debugging and Further Resources
+
+One extension to the submit script you can add is error logging. This is especially useful in debugging what is going wrong with your jobs.
+
+```
+#Note: if you have a lot of processes, this will generate a lot of files!
+#standard output gets written to out
+output = data.$(Process).out
+#error is probably the most useful file for debugging
+error = data.$(Process).err
+log = data$(Process).log
+```
 
 If you want to stop a job, you can use `condor_rm` to remove your job from the queue.
 

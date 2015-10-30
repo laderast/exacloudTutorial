@@ -3,12 +3,12 @@ N = 1
 universe = vanilla
 #set the executable here (could be a shell script, software, anything)
 executable = /usr/bin/python
-# The $(Process) variable is a built in variable that will range from
-# 0 to N-1
-myIndex = $(Process)
-#here we invoke our python script and use myIndex with a string formatter
-#We need to pad our number with a 0, so that "1" becomes "01"
-arguments = "pmi.py x$INT(myIndex, %02d)"
+# The $(Process) variable is a built in variable that will range from 0 to N-1
+# Here we define a new variable myFile that will output "data.0" for
+# process 0, "data.1" for process 1, etc.
+myFile = data.$(Process)
+# Here we use myFile variable as an argument to the pmi.py script
+arguments = "pmi.py $(myFile)"
 when_to_transfer_output = ON_EXIT
 #uncomment and fill out your username to get a notification when your job is done
 #notify_user = yourname@ohsu.edu
