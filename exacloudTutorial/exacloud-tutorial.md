@@ -48,7 +48,7 @@ We will be achieving this by executing 5 tasks, which is the standard workflow f
 
 Before you can even start with exacloud, you need an exacloud login and password. You will need to talk with ACC for an account and password.
 
-1. To connect with exacloud, use the ssh command and input your password when prompted:
+1. To connect with exacloud, use the ssh command and input your password when prompted.
 
 ```
 ssh USERNAME@exacloud.ohsu.edu
@@ -73,7 +73,7 @@ cp
 
 Instead, you can test your jobs by opening up an interactive session on exacloud. Essentially, opening up an interactive session guarantees the use of a particular node on exacloud. You can run jobs in an interactive session on the command line, which is what we're are going to do. It's also useful when you just need compute time for short jobs that don't need to be parallelized.
 
-1. Open an interactive session using condor_submit. It may take a few seconds for the interactive session to open up, so be patient.
+1. Open an interactive session using condor_submit. It may take a few seconds for the interactive session to open up, so be patient. (To exit the interactive shell, you can use the command `exit`.)
 ```
 condor_submit -interactive
 ```
@@ -85,7 +85,7 @@ condor_submit -interactive
 python pmi.py test.csv
 ```
 6. What is the output of the python script? How is it named? (list the contents of your folder if you're not sure).
-Note: To leave your interactive session, use the exit command. You'll return back to the head node. Don't leave it just yet, as we'll use the interactive session to split up your file (Task 2)
+7. Keep your interactive session open as we'll use it in Task 2.
 
 ##Task 2: Splitting up your problem
 
@@ -95,12 +95,14 @@ We'll be using the unix command split to split our 1 and 2-gram task up into 50 
 ```
 #numeric-suffixes argument is so split doesn't label the files
 #alphabetically (data.aa, data.ab, data.ac, etc)
-split --numeric-suffixes --lines=200000 fulldata.csv data.
+#after specifying the file fulldata.csv, we can specify a prefix for the
+#split files (output will be data00, data01, data02)
+split --numeric-suffixes --lines=200000 fulldata.csv data
 ```
 
 2. List the contents of your directory. How many files did you make using the split command? Remember this number.
 ```
-ls -l data.*
+ls data*
 ```
 
 3. If you noticed, the output of split gives us a padded numbering (for example, data.00 instead of data.0, data.01 instead of data.1), which makes it difficult to deal with using the built in looping functions in HTCondor. So we're going to rename these files using the renameFiles.sh script. (Take a look at it if you like).
@@ -236,7 +238,7 @@ If you want to stop a job, you can use `condor_rm` to remove your job from the q
 
 [Running Your First Condor Job](http://research.cs.wisc.edu/htcondor/tutorials/intl-grid-school-3/submit_first.html) is a helpful page to get you started.
 
-The[Exainfo beginner user wiki](http://exainfo.ohsu.edu/projects/new-user-information/wiki) can be helpful, especially with hints on how to set up your own library for particular languages.
+The [Exainfo beginner user wiki](http://exainfo.ohsu.edu/projects/new-user-information/wiki) can be helpful, especially with hints on how to set up your own library for particular languages.
 
 If your job seems slow, check the exacloud usage display at [http://exacloud.ohsu.edu/ganglia/](http://exacloud.ohsu.edu/ganglia/)
 

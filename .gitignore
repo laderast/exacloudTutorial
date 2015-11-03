@@ -1,3 +1,4 @@
 
 *.csv
 trainingandtestdata/test.txt.pmioutput
+*.pdf
