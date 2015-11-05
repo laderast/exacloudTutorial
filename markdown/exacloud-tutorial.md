@@ -21,6 +21,10 @@ You might wonder if you need to load all of your data onto each node that you ru
 
 For this reason, do *not* use Lustre for long term storage of your data! It's better to transfer your files off of Lustre when you're done.
 
+##The Tragedy of the Commons
+
+Exacloud is a shared resource, which means it is shared across OHSU. We all need to be sensible when we run jobs on it. Try to limit the number of concurrent jobs you are running (I try to keep things under 200), and be aware of how long your job will take. You can adjust the number of jobs running by limiting the number of jobs you queue, or by setting the ConcurrencyLimit variable in your submit file. For more info, see the [Exacloud User Guide](http://exainfo.ohsu.edu/attachments/download/34/ExaCloud%20User%20Guide%20v1.1.pdf) under 'Scheduling Policy under Exacloud'.
+
 ##Our Goal for Today
 
 We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency in a corpus of tweets.
@@ -54,17 +58,34 @@ Before you can even start with exacloud, you need an exacloud login and password
 ssh USERNAME@exacloud.ohsu.edu
 ```
 
-2. Your entry point is the ACC (Advanced Computing Center) filesystem, which is shared across all ACC machines (not just exacloud). You can run jobs from here, but you will run into space limitations (10 Gb limit). If you have larger data, it's much easier to use the lustre filesystem. So let's go to the lustre folder:
+2. Your entry point is the ACC (Advanced Computing Center) filesystem, which is shared across all ACC machines (not just exacloud). You can run jobs from here, but you will run into space limitations (10 Gb limit). If you have larger data, it's much easier to use the lustre filesystem. So let's go to the lustre folder for BioDSP:
 
 ```
-/home/exacloud/lustre1/users/laderast/exacloudTutorial.tar.gz
+cd /home/exacloud/lustre1/BioDSP/
 ```
 
-3. Make your own folder in the lustre folder. Copy the scripts, and example data into your folder.
+3. Make your own folder in the `BioDSP/users/` folder. Copy the scripts, and example data into your folder. (Obviously, substitute your own username for USERNAME here).
 
 ```
-mkdir [your user name]
-cp
+cd Users
+#make your own directory in the /home/exacloud/lustre1/BioDSP/Users/ folder
+mkdir USERNAME
+#change to your user folder
+cd USERNAME
+```
+
+4. Copy the Tutorial tarball to your current directory
+
+```
+##Note the Trailing period!
+cp /home/exacloud/lustre1/BioDSP/exacloudTutorial.tar.gz ./
+```
+
+5. Unzip your tarball and change into the exacloudTutorial directory. This is where you're going to do all of your work (i.e. `/home/exacloud/lustre1/BioDSP/Users/exacloudTutorial/USERNAME/`) for the tutorial.
+
+```
+tar -xzvf exacloudTutorial.tar.gz
+cd exacloudTutorial/
 ```
 
 ##Task 1: Testing your code in an interactive session
@@ -120,7 +141,7 @@ ls -l
 
 If you have multiple files to process at a time, another alternative is to set up numbered directories where each file has the identical name. This affects how you set up your submit script.
 
-Sometimes, however, you have to run scripts where everything is hard-coded.
+In this case, your directories might be numbered numerically ("folder0", "folder1", "folder2", etc) so you can programmatically run data in each of them. Your files will probably be named identically in each of them so you can run the data.
 
 ##Task 3: Setting up your submit script to HTCondor
 
@@ -177,6 +198,10 @@ arguments = "pmi.py july.csv"
 Queue
 ```
 
+###Extension: Submit File for Multiple directories
+
+How would you change the above submit file to run files in different directories as set up in the Task 2 extension? *Hint:* adjust your arguments variable!
+
 ##Task 4: Running your Job on Exacloud
 
 There are two commands that will be necessary to understand running jobs on exacloud: the first is *condor_submit*, which submits the job, and *condor_q*, which shows you current jobs running on exacloud.
@@ -197,7 +222,7 @@ condor_submit pmi.submit
 
 ##Task 5: Putting your results back together
 
-Hopefully your job executed correctly. If not, ask for help.
+Hopefully your job executed correctly. If not, ask for help. Now we'll put together all of the .pmioutput files together and create unified CSV that has PMI values for co-occuring words.
 
 1. Enter an interactive session again using *condor_submit -interactive*.
 2. Ensure that all files were processed by listing all of the .pmioutput files (if you didn't remove your test.pmioutput file, you may want to remove it before proceeding):
@@ -208,11 +233,13 @@ ls *.pmioutput
 ```
 python stitchpmi.py
 ```
-4. Let's plot the non-zero results using R. Run the *plot-pmi.R* script. The output of this will be a single plot, *pmi.jpg*.
+4. Let's plot the non-zero results using R. Run the *plot-pmi.R* script. The output of this will be a single plot, *pmiPlot.pdf*.
 ```
-Rscript plot-pmi.R totalpmioutput.csv
+#replace WORD1 and WORD2 with your words!
+Rscript plotPMIOutput.R totalpmioutput.csv WORD1 WORD2
 ```
 5. To look at the plot, you'll need to transfer everything off of lustre. Use an FTP program such as WinSCP or Cyberduck to download your plot and totalpmioutput.csv file.
+
 6. Share with the group! Let's see what you came up with.
 
 ##Task 6: What next?
@@ -236,9 +263,11 @@ log = data$(Process).log
 
 If you want to stop a job, you can use `condor_rm` to remove your job from the queue.
 
-[Running Your First Condor Job](http://research.cs.wisc.edu/htcondor/tutorials/intl-grid-school-3/submit_first.html) is a helpful page to get you started.
+The [Exainfo beginner user wiki](http://exainfo.ohsu.edu/projects/new-user-information/wiki) can be helpful, especially with hints on how to set up your own library and dependencies for particular languages.
 
-The [Exainfo beginner user wiki](http://exainfo.ohsu.edu/projects/new-user-information/wiki) can be helpful, especially with hints on how to set up your own library for particular languages.
+Also, the [Exacloud User Guide](http://exainfo.ohsu.edu/attachments/download/34/ExaCloud%20User%20Guide%20v1.1.pdf) can be helpful as well.
+
+[Running Your First Condor Job](http://research.cs.wisc.edu/htcondor/tutorials/intl-grid-school-3/submit_first.html) is a helpful page to get you started.
 
 If your job seems slow, check the exacloud usage display at [http://exacloud.ohsu.edu/ganglia/](http://exacloud.ohsu.edu/ganglia/)
 
