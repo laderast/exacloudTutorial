@@ -6,3 +6,5 @@ trainingandtestdata/test.txt.pmioutput
 *.Rproj
 *.jpg
 .Rhistory
+*.tar.gz
+exacloudTutorial/*
