@@ -15,17 +15,21 @@ However, to run jobs effectively on exacloud, you must understand some basic tec
 
 Essentially, you can think of exacloud as divided into two different node types: the first is the *head node*, which is the node that you sign into initially into exacloud. The head node handles all of the scheduling and file transfer to the other nodes in the system. The other nodes are subservient *compute nodes*.
 
-How does the head node tell the compute nodes what to do? There is a program called HTCondor (currently version 8.0.6 on exacloud) that schedules computing jobs for all of the nodes on exacloud. How does it decide which jobs to run on which nodes?
+How does the head node tell the compute nodes what to do? There is a program called HTCondor (currently version 8.0.6 on exacloud) that schedules computing jobs for all of the nodes on exacloud. How does it decide which jobs to run on which nodes? Part of it has to do with compute requirements - each individual job requires a certain amount of CPU power and Memory. This is balanced with the current load (i.e. other jobs currently running) on the cluster.
 
 You might wonder if you need to load all of your data onto each node that you run your jobs on. The short answer is no, because exacloud has a distributed filesystem called Lustre. Essentially when you copy a file onto Lustre, the file gets copied in such a way across nodes that it is easily accessible by each node. The drawback to Lustre is that it is currently difficult to maintain and can be prone to data loss.
 
 For this reason, do *not* use Lustre for long term storage of your data! It's better to transfer your files off of Lustre when you're done.
 
+##The Tragedy of the Commons
+
+Exacloud is a shared resource, which means it is shared across OHSU. We all need to be sensible when we run jobs on it. Try to limit the number of concurrent jobs you are running (I try to keep things under 200), and be aware of how long your job will take. You can adjust the number of jobs running by limiting the number of jobs you queue, or by setting the ConcurrencyLimit variable in your submit file. For more info, see the [Exacloud User Guide](http://exainfo.ohsu.edu/attachments/download/34/ExaCloud%20User%20Guide%20v1.1.pdf) under 'Scheduling Policy under Exacloud'.
+
 ##Our Goal for Today
 
 We will be reproducing the following analysis using data pulled from the twitter feed: [On Geek Versus Nerd](https://slackprop.wordpress.com/2013/06/03/on-geek-versus-nerd/). We want to discover the words that co-occur with "nerd" and "geek" with high frequency in a corpus of tweets.
 
-![pmi equation](markdown/pmiequation.png)
+![PMI equation](markdown/pmiequation.png)
 
 Essentially, we need to calculate the probability of our two words of interest. Then for every other word, we calculate the probability of co-occurence with one of our words.
 
@@ -54,17 +58,40 @@ Before you can even start with exacloud, you need an exacloud login and password
 ssh USERNAME@exacloud.ohsu.edu
 ```
 
-2. Your entry point is the ACC (Advanced Computing Center) filesystem, which is shared across all ACC machines (not just exacloud). You can run jobs from here, but you will run into space limitations (10 Gb limit). If you have larger data, it's much easier to use the lustre filesystem. So let's go to the lustre folder:
+2. Your entry point is the ACC (Advanced Computing Center) filesystem, which is shared across all ACC machines (not just exacloud). You can run jobs from here, but you will run into space limitations (10 Gb limit). If you have larger data, it's much easier to use the lustre filesystem. So let's go to the lustre folder for BioDSP:
 
 ```
-/home/exacloud/lustre1/users/laderast/exacloudTutorial.tar.gz
+cd /home/exacloud/lustre1/BioDSP/
 ```
 
-3. Make your own folder in the lustre folder. Copy the scripts, and example data into your folder.
+3. Make your own folder in the `BioDSP/users/` folder. Copy the scripts, and example data into your folder. (Obviously, substitute your own username for USERNAME here).
 
 ```
-mkdir [your user name]
-cp
+cd Users
+#make your own directory in the /home/exacloud/lustre1/BioDSP/Users/ folder
+mkdir USERNAME
+#change to your user folder
+cd USERNAME
+```
+
+4. Copy the Tutorial tarball to your current directory
+
+```
+##Note the Trailing period!
+cp /home/exacloud/lustre1/BioDSP/exacloudTutorial.tar.gz ./
+```
+
+5. Unzip your tarball and change into the exacloudTutorial directory. This is where you're going to do all of your work (i.e. `/home/exacloud/lustre1/BioDSP/Users/USERNAME/exacloudTutorial/`) for the tutorial.
+
+```
+tar -xzvpf exacloudTutorial.tar.gz
+cd exacloudTutorial/
+```
+
+6. Change permission on all the files in your directory. You will need write access for these files.
+
+```
+chmod 777 *
 ```
 
 ##Task 1: Testing your code in an interactive session
@@ -107,7 +134,8 @@ ls data*
 
 3. If you noticed, the output of split gives us a padded numbering (for example, data.00 instead of data.0, data.01 instead of data.1), which makes it difficult to deal with using the built in looping functions in HTCondor. So we're going to rename these files using the renameFiles.sh script. (Take a look at it if you like).
 ```
-./renameFiles.sh
+#need to provide prefix as argument to renameFiles.sh
+./renameFiles.sh data
 ```
 
 4. Confirm that the files have been renamed properly.
@@ -120,7 +148,7 @@ ls -l
 
 If you have multiple files to process at a time, another alternative is to set up numbered directories where each file has the identical name. This affects how you set up your submit script.
 
-Sometimes, however, you have to run scripts where everything is hard-coded.
+In this case, your directories might be numbered numerically ("folder0", "folder1", "folder2", etc) so you can programmatically run data in each of them. Your files will probably be named identically in each of them so you can run the data.
 
 ##Task 3: Setting up your submit script to HTCondor
 
@@ -177,6 +205,14 @@ arguments = "pmi.py july.csv"
 Queue
 ```
 
+###Extension: Submit File for Multiple directories
+
+How would you change the above submit file to run files in different directories as set up in the Task 2 extension? *Hint:* adjust your arguments variable!
+
+###Extension: Running other languages
+
+How would we run other languages in our submit script? What about a version of a language you installed?
+
 ##Task 4: Running your Job on Exacloud
 
 There are two commands that will be necessary to understand running jobs on exacloud: the first is *condor_submit*, which submits the job, and *condor_q*, which shows you current jobs running on exacloud.
@@ -197,7 +233,7 @@ condor_submit pmi.submit
 
 ##Task 5: Putting your results back together
 
-Hopefully your job executed correctly. If not, ask for help.
+Hopefully your job executed correctly. If not, ask for help. Now we'll put together all of the .pmioutput files together and create unified CSV that has PMI values for co-occuring words.
 
 1. Enter an interactive session again using *condor_submit -interactive*.
 2. Ensure that all files were processed by listing all of the .pmioutput files (if you didn't remove your test.pmioutput file, you may want to remove it before proceeding):
@@ -208,20 +244,31 @@ ls *.pmioutput
 ```
 python stitchpmi.py
 ```
-4. Let's plot the non-zero results using R. Run the *plot-pmi.R* script. The output of this will be a single plot, *pmi.jpg*.
+4. Let's plot the non-zero results using R. Run the *plot-pmi.R* script. The output of this will be a single plot, *pmiPlot.pdf*.
 ```
-Rscript plot-pmi.R totalpmioutput.csv
+#replace WORD1 and WORD2 with your words!
+Rscript plotPMIOutput.R totalpmioutput.csv WORD1 WORD2
 ```
 5. To look at the plot, you'll need to transfer everything off of lustre. Use an FTP program such as WinSCP or Cyberduck to download your plot and totalpmioutput.csv file.
+
 6. Share with the group! Let's see what you came up with.
 
-##Task 6: What next?
+##Task 6: Cleanup
+
+1. Be sure to clean your files out of your folder. At the very least, remove the data files:
+
+```
+rm data*
+rm fulldata.csv
+```
+
+##Task 7: What next?
 
 We have showed you the basic way to run jobs on exacloud. Now, you'll need to learn more about writing submit scripts and how to run different languages on exacloud. Note that our version of condor is older (8.0.6) compared to the more sophisticated versions (8.4.0 and beyond), so some of the tricks on the pages below.
 
 The one important trick is how to install dependencies that you need for each language in Lustre. You can set important environment variables (such as *R_LIBS_USER*, which is the default location of your personal R library) using an "environment=" line in your submit script. For more info, please see the Exainfo beginner user wiki linked below.
 
-##Task 7: Debugging and Further Resources
+##Task 8: Debugging and Further Resources
 
 One extension to the submit script you can add is error logging. This is especially useful in debugging what is going wrong with your jobs.
 
@@ -236,9 +283,11 @@ log = data$(Process).log
 
 If you want to stop a job, you can use `condor_rm` to remove your job from the queue.
 
-[Running Your First Condor Job](http://research.cs.wisc.edu/htcondor/tutorials/intl-grid-school-3/submit_first.html) is a helpful page to get you started.
+The [Exainfo beginner user wiki](http://exainfo.ohsu.edu/projects/new-user-information/wiki) can be helpful, especially with hints on how to set up your own library and dependencies for particular languages.
 
-The [Exainfo beginner user wiki](http://exainfo.ohsu.edu/projects/new-user-information/wiki) can be helpful, especially with hints on how to set up your own library for particular languages.
+Also, the [Exacloud User Guide](http://exainfo.ohsu.edu/attachments/download/34/ExaCloud%20User%20Guide%20v1.1.pdf) can be helpful as well.
+
+[Running Your First Condor Job](http://research.cs.wisc.edu/htcondor/tutorials/intl-grid-school-3/submit_first.html) is a helpful page to get you started.
 
 If your job seems slow, check the exacloud usage display at [http://exacloud.ohsu.edu/ganglia/](http://exacloud.ohsu.edu/ganglia/)
 
