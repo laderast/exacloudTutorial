@@ -1,0 +1,11 @@
+N = 3
+universe = vanilla
+executable = /usr/bin/Rscript
+getenv = TRUE
+inputDir = /home/users/laderast/Rexample/data/
+environment = "R_LIBS=~/R/x86_64-redhat-linux-gnu-library/3.3/"
+arguments = "--vanilla runRJob.R i=$(Process) inputDir=$(inputDir)"
+output = test$(Process).out
+error = test$(Process).err
+log = test$(Process).log
+Queue $(N)

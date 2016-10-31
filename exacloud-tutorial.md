@@ -353,5 +353,5 @@ environment = "R_LIBS=~/lustre/rlib"
 arguments = "--vanilla runTSNEexacloudCDMarkers.R i=$(Process) inputDir='~/filesToProcess'"
 Queue N
 ```
-For a full example, look in the `R/` folder of the exacloudTutorial.
+For a full example, look in the `Rexample/` folder of the exacloudTutorial.
 
