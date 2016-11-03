@@ -1,6 +1,6 @@
 ---
 title: "Exacloud Workshop"
-author: "Ted Laderas (laderast@ohsu.edu) and Ryan Swan"
+author: "Ted Laderas (laderast@ohsu.edu), James Jacobs and Ryan Swan"
 date: "November 3, 2016"
 output: pdf_document
 ---
@@ -69,8 +69,8 @@ cd /home/exacloud/lustre1/BioDSP/
 3. Make your own folder in the `BioDSP/users/` folder. Copy the scripts, and example data into your folder. (Obviously, substitute your own username for USERNAME here).
 
 ```
-cd Users
-#make your own directory in the /home/exacloud/lustre1/BioDSP/Users/ folder
+cd users
+#make your own directory in the /home/exacloud/lustre1/BioDSP/users/ folder
 mkdir USERNAME
 #change to your user folder
 cd USERNAME
@@ -160,7 +160,7 @@ In this case, your directories might be numbered numerically ("folder0", "folder
 nano pmi.submit
 ```
 2. Set the N variable to the number of files you want to process (you did remember this number, right?).
-3. We are going to be using the built in looping mechanism in HTCondor to run the pmi.py script on each file separately. Look at the "arguments" line. We use the built in $(Process) variable to select which file to run.
+3. We are going to be using the built in looping mechanism in HTCondor to run the `pmi.py` script on each file separately. Look at the "arguments" line. We use the built in $(Process) variable to select which file to run.
 4. Exit the interactive session using `exit`. We will need to be in the head node to now submit our script.
 
 ##Task 4: Running your Job on Exacloud
